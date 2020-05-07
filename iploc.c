@@ -133,7 +133,8 @@ static inline uint
 ip_db_index_get_text_len(ip_db_t *db, uint n)
 {
     byte *pos = db->index + n*db->index_size + 7;
-    return db->extended ? decode_uint16_be(pos) : pos[0];
+    // return db->extended ? decode_uint16_be(pos) : pos[0];
+    return pos[0];
 }
 
 // ------------------------------------------------------------------
@@ -221,7 +222,7 @@ ip_db_init_impl(const char *path, byte extended)
     db->extended = extended;
     uint hindex_size = extended ? 2 : 1;
     db->hindex_size = hindex_size;
-    db->index_size = 4 + 3 + hindex_size;
+    db->index_size = 8;
 
     uint hint_num = 1 << (hindex_size*8);
     uint hint_size = sizeof(uint) * hint_num;
@@ -299,6 +300,9 @@ ip_locate_v(ip_db_t *db, uint32_t ip_val, char *result)
 
     uint low = ip_db_hint_get_low(db, ip_val);
     uint high = ip_db_hint_get_high(db, ip_val);
+    u_int ip_index = 0;
+    u_int offset;
+    u_int len;
 
     while (low < high) {
         uint mid = low + (high - low)/2;
@@ -310,9 +314,17 @@ ip_locate_v(ip_db_t *db, uint32_t ip_val, char *result)
             high = mid;
         }
     }
-
-    uint offset = ip_db_index_get_offset(db, high);
-    uint len = ip_db_index_get_text_len(db, high);
+    /* 转换后的datx的index节点是ip段的起始节点，需要做查找判断*/
+    if (ip_db_index_get_ip(db,high) == ip_val) {
+        offset = ip_db_index_get_offset(db, high);
+        len = ip_db_index_get_text_len(db, high);
+    } else {
+        offset = ip_db_index_get_offset(db, high - 1); 
+        len = ip_db_index_get_text_len(db, high - 1);
+    }
+    /**************************************************/
+    // uint offset = ip_db_index_get_offset(db, high);
+    // uint len = ip_db_index_get_text_len(db, high);
     const char *text = ip_db_get_text(db, offset);
 
     strncpy(result, text, len);

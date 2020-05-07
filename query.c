@@ -1,4 +1,12 @@
 /*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Ghui
+ * @Date: 2020-05-06 09:36:11
+ * @LastEditors: Ghui
+ * @LastEditTime: 2020-05-07 10:37:00
+ */
+/*
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
@@ -32,7 +40,7 @@ int main(int argc, const char *argv[])
     ip_db_t *ipdb = NULL;
 
     if (argc == 1) {
-        ipdb = ip_db_init("17monipdb.dat");
+        ipdb = ip_db_init_x("ipdb.datx");
     } else if (argc == 2) {
         if (strcmp(argv[1], "-x") == 0) {
             ipdb = ip_db_init_x("17monipdb.datx");
