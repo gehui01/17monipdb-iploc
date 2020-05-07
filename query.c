@@ -1,12 +1,4 @@
 /*
- * @Descripttion: 
- * @version: 
- * @Author: Ghui
- * @Date: 2020-05-06 09:36:11
- * @LastEditors: Ghui
- * @LastEditTime: 2020-05-07 10:37:00
- */
-/*
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
